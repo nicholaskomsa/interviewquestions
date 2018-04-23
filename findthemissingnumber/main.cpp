@@ -10,9 +10,6 @@ class Tests {
 
 public:
 
-
-
-
 	class TestCase {
 
 		std::vector<int> mElements;
@@ -67,7 +64,7 @@ public:
 		sstr << argv[0];
 		path.resize(255);
 
-		sstr.getline( const_cast<char*>( path.c_str()) , path.size(), '\n');
+		sstr.getline(const_cast<char*>(path.c_str()), path.size(), '\n');
 
 		sstr.clear();
 		sstr << argv[1];
@@ -77,7 +74,7 @@ public:
 		const int lengthOfTestCase = 2;
 		int testCaseIndex = 0;
 
-		for( int testCase=0; testCase < numTestCases; testCase++)
+		for (int testCase = 0; testCase < numTestCases; testCase++)
 			for (; testCaseIndex < numTestCases * lengthOfTestCase; testCaseIndex += lengthOfTestCase) {
 
 				TestCase testCase(argv[testCaseIndex + 2], argv[testCaseIndex + 3]);
@@ -85,7 +82,7 @@ public:
 			}
 	}
 	void printTestCases() {
-		
+
 		std::for_each(mTests.begin(), mTests.end(), [](TestCase& testCase) {
 			testCase.print();
 		});
@@ -97,65 +94,22 @@ public:
 
 	}
 	int getNumTestCases() { return mTests.size(); }
-	TestCase& getTestCase( int testCase ) { return mTests[testCase]; }
+	TestCase& getTestCase(int testCase) { return mTests[testCase]; }
 };
 
 
-int kadanesAlgorithm(Tests::TestCase& testCase) {
-	/*
-	Given an array containing both negative and positive integers. Find the contiguous sub-array with maximum sum.
-	Print the maximum sum of the contiguous sub-array in a separate line for each test case.
-	*/
+int findMissingNumber(Tests::TestCase& testCase) {
 
-	
+	int desiredNumber = 1;
 	std::vector<int>& elements = testCase.getElements();
-
-
-	/* first attempt
-	int result = elements[0];
-	int sum = 0;
-
-	for (int c = 0; c < elements.size(); c++) {
-		for (int offsetNeg = 0;  c - offsetNeg >= 0; offsetNeg++) {
-			for (int offsetPos = 0; offsetPos + c < elements.size(); offsetPos++) {
-
-				sum = 0;
-				for (int i = c - offsetNeg; i <= c + offsetPos; i++) {
-					sum += elements[i];
-				}
-			}
-		}
-		result = std::max(result, sum);
-	}
-	*/
-	//modified internet code
-	int sum = elements[0];
-	int result = sum;
-		
 	for (int i = 1; i < elements.size(); i++) {
-	
-		if (sum > 0)
-			sum += elements[i];
-		else
-			sum = elements[i];
-
-		result = std::max(result, sum);
+		desiredNumber = elements[i - 1] + 1;
+		if (elements[i] != desiredNumber ) return desiredNumber;
 	}
 
-	/*	
-	//from internet
-	int curMax = elements[0];
-	result = curMax;
-	for (int i = 1; i < elements.size(); i++) {
-		curMax = std::max(elements[i], elements[i] + curMax);
-		result = std::max(curMax, result);
-	}
-	*/
-	
-
-
-	return result;
+	return desiredNumber;
 }
+
 
 int main(int argc, char**argv) {
 
@@ -167,7 +121,7 @@ int main(int argc, char**argv) {
 
 		Tests::TestCase& testCase = tests.getTestCase(i);
 
-		int result = kadanesAlgorithm(testCase);
+		int result = findMissingNumber(testCase);
 		testCase.setResult(result);
 	}
 
